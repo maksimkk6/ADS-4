@@ -26,7 +26,6 @@ int countPairs2(int *arr, int len, int value)
 
         if (sum == value)
         {
-            // если элементы равны
             if (arr[left] == arr[right])
             {
                 int k = right - left + 1;
