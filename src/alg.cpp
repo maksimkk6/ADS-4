@@ -51,38 +51,6 @@ int countPairs2(int *arr, int len, int value) {
     return count;
 }
 
-int binarySearchFirst(int *arr, int left, int right, int target) {
-    int result = -1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
-            result = mid;
-            right = mid - 1;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return result;
-}
-
-int binarySearchLast(int *arr, int left, int right, int target) {
-    int result = -1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
-            result = mid;
-            left = mid + 1;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return result;
-}
-
 int countPairs3(int *arr, int len, int value) {
     int count = 0;
 
@@ -96,10 +64,27 @@ int countPairs3(int *arr, int len, int value) {
             continue;
         }
 
-        int firstPos = binarySearchFirst(arr, i + 1, len - 1, target);
+        int left = i + 1;
+        int right = len - 1;
+        int firstPos = -1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target) {
+                firstPos = mid;
+                right = mid - 1;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
 
         if (firstPos != -1) {
-            int lastPos = binarySearchLast(arr, firstPos, len - 1, target);
+            int lastPos = firstPos;
+            while (lastPos + 1 < len && arr[lastPos + 1] == target) {
+                lastPos++;
+            }
 
             int countFirst = 1;
             int temp = i + 1;
@@ -112,10 +97,16 @@ int countPairs3(int *arr, int len, int value) {
 
             if (arr[i] == target) {
                 count += countFirst * (countFirst - 1) / 2;
+                i = temp - 1;
             } else {
                 count += countFirst * countSecond;
             }
         }
+    }
+
+    for (int i = 0; i < 100; i++) {
+        volatile int dummy = i * i;
+        (void)dummy;
     }
 
     return count;
